@@ -12,26 +12,24 @@ const INPUTBUTTON = FONTCOLOR;
 const windowWidth = Dimensions.get('window').width;
 const widthNeg10 = windowWidth*.90;
 
+
+const onPressRespond = () => {
+    console.log('I am thy btn :')
+}
+
+
 // given props item={item} bkgColor={"someColor"} isComplete={false}
 export const CreateListItem = (props) => {
-    // const [counter, setCounter] = useState(0)
-    // const [modalVisible, setModalVisible] = useState(false)
 
-
-    const onPressShowBtns = () => {
-        // do somthing 
-        // if(props.isComplete){
-        //     setModalCompleteVisable(True)
-        // }else{
-        //     setModalCompleteVisable(True)
-        // }
+    const onPressItemTesting = () => {
+        // console.log('Thy pressed me : ' + props.item.id )
     }
 
     return(
         <View style={{width: widthNeg10}}>
             <TouchableOpacity  
             style={styles.listItemButton} 
-            onPress={onPressShowBtns}
+            onPress={onPressRespond}
             >
                 <View style={[styles.listItemCont, {backgroundColor: props.bkgColor}]}>
                     {/* <Text>Width:{widthNeg10}</Text> */}
@@ -50,59 +48,6 @@ export const CreateListItem = (props) => {
 
 const styles = StyleSheet.create({
 
-    //------------------------------
-    //--------- MODAL DOCS PAPGE ---------------------
-
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22,
-    },
-
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-    },
-
-    buttonOpen: {
-        backgroundColor: "#F194FF",
-    },
-
-    buttonClose: {
-        backgroundColor: "#2196F3",
-    },
-
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center",
-    },
-
-
-    //--------------------------------
-    //--------------------------------
 
     listItemButton:{
         width: "100%",

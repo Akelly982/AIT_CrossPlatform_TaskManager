@@ -1,19 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {useState , useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput  } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Dimensions, Modal, ImageBackground, Pressable  } from 'react-native';
 
 import { ListItem } from './components/ListItem';
-import { CreateListItem } from './components/CreateListItem';
+//import { CreateListItem } from './components/CreateListItem';
 
 // import {Const} from "./const";
 //<Const />
-const ACCENTCOLOR = "orange";
-const BKGCOLOR = "lightgrey";
-const BKGCOLOR2 = "darkgrey";
-const FONTCOLOR = "#e8e8e8";
-const FONTCOLORDARK = "#3b3b3b";
-const INPUTBUTTON = FONTCOLOR;
+const ACCENTCOLOR = "orange"
+const WARNINGCOLOR = "#a05353"
+const BKGCOLOR = "lightgrey"
+const BKGCOLOR2 = "darkgrey"
+const FONTCOLOR = "#e8e8e8"
+const FONTCOLORDARK = "#3b3b3b"
+const INPUTBUTTON = FONTCOLOR
 
 
 const tempData = [
@@ -25,10 +26,6 @@ const tempData = [
   {id: '4341132', destination: 'Eves Bar', itemName: "KFC Family bucket", quantity: "1", completed: false},
 ];
 
-const tempData2 = [
-  {id: '41324132', destination: 'Hilda', itemName: "Tortalini", quantity: "1", completed: false},
-  {id: '43342132144', destination: 'Garbage', itemName: "Obsidion stone", quantity: "8", completed: false},
-];
 
 const tempDataCompleted = [
   {id: '67465', destination: 'Eves Bar', itemName: "Tap Water Bottles", quantity: "6", completed: true},
@@ -39,149 +36,196 @@ const tempDataCompleted = [
 ];
 
 
+const windowWidth = Dimensions.get('window').width;
+const widthNeg10 = windowWidth*.90;
+
+
+
+
 
 export default function App() {
-  const [id , setId] = useState()
+
   const [destination, setDestination] = useState()
   const [itemName, setName] = useState()
   const [quantity, setQuantity] = useState()
-  const [completed, setCompleted] = useState(false)
 
   const [dataActive, setDataActive] = useState(tempData)
+  const [itemSelected , setItemSelected] = useState(null)
+  //updater this is just gonna flip back and forth between on an off 
+  //what matters is that the value changes
+  const [updater, setUpdater] = useState(false);
 
-  const [selected , setSelected] = useState(null)
-
-
-  const onPressShow = () => {
-    console.log(id)
-  }
+  const [modalVisible,setModalVisible] = useState(false)
+  
 
   const onPressInputBtn = () => {
-    // create a new item in same format of original array
-    let newItem = {id: id, destination: destination, itemName: itemName, quantity: quantity, completed: false}
-    // add new item to original array
-    tempData.push(newItem)
-    setDataActive(tempData)
-    //console.log(tempData)
 
-    //check for update in state
-    // if(dataActive === tempData){
-    //   console.log("update to dataActive not found")
-    // }else{
-    //   setDataActive(tempData2)
-    // }
-    
-  }
-
-  // functions return JSX 
-  const myRenderItem = ({item}) => {
-    if(!item.completed){
-      //Active items
-      return(
-        <CreateListItem item={item} bkgColor={BKGCOLOR} isComplete={false}/> 
-      );
-      
+    if(isNaN(quantity)){
+      console.log("quantity is not a number: " + quantity)
     }else{
-      //Completed Items
-      return(
-        <CreateListItem item={item} bkgColor={BKGCOLOR2} isComplete={true}/> 
-      );
+      //get a timestamp for id
+      let timeId = Date.now().toString()
+      console.log(timeId)
+
+      // create a new item in same format of original array
+      let newItem = {id: timeId, destination: destination, itemName: itemName, quantity: quantity, completed: false}
+      // add new item to original array
+      tempData.unshift(newItem)
+      setDataActive(tempData)
+
+      //console.log(dataActive)
+      setUpdater(!updater)
     }
+
   }
+
+  //Rendering items
+  const myRenderItem = ({item}) => {
+
+    let color =  BKGCOLOR2   // least likely option
+    let isSelected = false;
+    if(itemSelected === item.id){
+      color = ACCENTCOLOR;
+      isSelected = true;
+    }else if(!item.completed){
+      color = BKGCOLOR
+    }
+    return(
+      <CreateListItem item={item} bkgColor={color} isComplete={item.completed} isSelected={isSelected}/>
+    )
+  }
+
+
+  //Item we Are Rendering and its onPress Event
+  //Is here due to connection to useState's
+  const CreateListItem = (props) => {
+
+    const onPressItem = () => {
+        // console.log('Thy pressed me : ' + props.item.id )
+        setItemSelected(props.item.id)
+    }
+
+    const Main = () => {
+      return(
+        <TouchableOpacity  
+            style={[styles.listItemContButton, {backgroundColor: props.bkgColor}]}
+            onPress={onPressItem}
+            >
+                    {/* <Text>Width:{widthNeg10}</Text> */}
+                    <Text style={styles.listItemText}>{props.item.destination}</Text>
+                    <View style={styles.listItemInnerButtonCont}>
+                        <Text style={styles.listItemText}>{props.item.itemName}</Text>
+                        <Text style={styles.listItemText}>  x{props.item.quantity}</Text>
+                  </View>
+        </TouchableOpacity>
+      )
+    }
+
+    if(props.isSelected == false){
+      return(
+        <View style={[styles.listItemOuterCont,{width: widthNeg10}]}>
+            <Main /> 
+        </View>
+      )
+    }else{
+      return(
+        <View style={[styles.listItemOuterCont,{width: widthNeg10}]}>
+            <Main />
+            <View style={styles.selectButtonContainer}>
+              <TouchableOpacity
+                style={[styles.selectItemButton,{backgroundColor: ACCENTCOLOR}]}
+                onPress={onPressItem}
+              >
+                <Text>Change Status</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.selectItemButton,{backgroundColor: WARNINGCOLOR}]}
+                onPress={onPressItem}
+              >
+                <Text>Delete</Text>
+              </TouchableOpacity>
+            </View>
+        </View>
+    )
+    }
     
-  // components are straight JSX
-  const plzRender = ({item}) => (   
-    <Text>IEXIST</Text>
-  )
+  }
 
-
-
-
+  // MAIN RETURN 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}> Scribbles </Text>
+
+    <View style={styles.modalOverlayOpacityBkg}>
+
+      <View style={styles.container}>
+        <Text style={styles.header}> Scribbles </Text>
+
+      {/* Input Content */}
+        {/* Header */}
+        <View style={styles.inputFieldRowCenterTitle}>
+          <Text>Create Task:</Text>
+        </View>
 
 
-     {/* Input Content */}
-      {/* Header */}
-      <View style={styles.inputFieldRowCenterTitle}>
-        <Text>Create Task:</Text>
-      </View>
-      {/* Temp id input row untill it is generated */}
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Id:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="2"
-          onChangeText={(value) => setId(value)}
-          keyboardType="numeric"
-        >
-        </TextInput>
-      </View>
-      {/* Inputs */}
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Location/person:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="ZenBar/Monica"
-          onChangeText={(x) => setDestination(x)}
-        >
-        </TextInput>
-      </View>
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Item name:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="Bottled Water"
-          onChangeText={(x) => setName(x)}
-        >
-        </TextInput>
-      </View>
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Quantity:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="2"
-          onChangeText={(x) => setQuantity(x)}
-          keyboardType="numeric"
-        >
-        </TextInput>
-      </View>
-      <View style={styles.inputFieldRowCenterButton}>
-        <TouchableOpacity 
-          style={styles.inputButton}
-          onPress={onPressInputBtn}
-        >
-          <Text>Add</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Temp butn */}
-      <View style={styles.inputFieldRowCenterButton}>
-        <TouchableOpacity 
-          style={styles.inputButton}
-          onPress={onPressShow}
-        >
-          <Text>testing</Text>
-        </TouchableOpacity>
-      </View>
-      {/* ------------ */}
-      {/* End inputs section */}
+        {/* Inputs */}
+        <View style={styles.inputFieldRow}>
+          <Text style={styles.inputFieldRowText}>Location/person:</Text>
+          <TextInput 
+            style={styles.textInput}
+            placeholder="ZenBar/Monica"
+            onChangeText={(x) => setDestination(x)}
+          >
+          </TextInput>
+        </View>
+        <View style={styles.inputFieldRow}>
+          <Text style={styles.inputFieldRowText}>Item name:</Text>
+          <TextInput 
+            style={styles.textInput}
+            placeholder="Bottled Water"
+            onChangeText={(x) => setName(x)}
+          >
+          </TextInput>
+        </View>
+        <View style={styles.inputFieldRow}>
+          <Text style={styles.inputFieldRowText}>Quantity:</Text>
+          <TextInput 
+            style={styles.textInput}
+            placeholder="2"
+            onChangeText={(x) => setQuantity(x)}
+            keyboardType="numeric"
+          >
+          </TextInput>
+        </View>
+        {/* Buttons */}
+        <View style={styles.inputFieldRowCenterButton}>
+          <TouchableOpacity 
+            style={styles.inputButton}
+            onPress={onPressInputBtn}
+          >
+            <Text>Add</Text>
+          </TouchableOpacity>
+        </View>
 
 
-       {/* Flat Lists */}
-      <Text>-----Active-----</Text>
-      <FlatList 
-        data = {dataActive}
-        renderItem={myRenderItem}  // use our listItem component from import instead of renderer
-        keyExtractor={item => item.id}
-        updateCellsBatchingPeriod={4000}
-      />
-      <Text>-----Completed-----</Text>
-      <FlatList
-        data={tempDataCompleted}
-        renderItem={myRenderItem}
-        keyExtractor={x => x.id}
-      />
+
+
+        {/* Flat Lists */}
+        <Text>-----Active-----</Text>
+        <FlatList 
+          data = {dataActive}
+          renderItem={myRenderItem}  // use our listItem component from import instead of renderer
+          keyExtractor={item => item.id}
+          extraData={[itemSelected, updater]}
+          
+        />
+        <Text>-----Completed-----</Text>
+        <FlatList
+          data={tempDataCompleted}
+          renderItem={myRenderItem}
+          keyExtractor={x => x.id}
+          extraData={[itemSelected, updater]}
+        />
+      </View>
+
     </View>
 
 
@@ -191,7 +235,7 @@ export default function App() {
 const styles = StyleSheet.create({
 
   spacer:{
-    backgroundColor: "#3b3b3b"
+    backgroundColor: "#3b3b3b",
   },
 
   container: {
@@ -213,8 +257,72 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+
+// ----------------------------------
+// -------- Modal -------------------
+
+  // modalOverlayOpacityBkg: {
+  //   position: 'absolute',
+  //   backgroundColor: '#3b3b3b',
+  //   zIndex: 99,
+  // },
+
+
+
+  // centeredView: {
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   marginTop: 22
+  // },
+
+  // modalView: {
+  //   margin: 20,
+  //   backgroundColor: "white",
+  //   borderRadius: 20,
+  //   padding: 35,
+  //   alignItems: "center",
+  //   shadowColor: "#000",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 4,
+  //   elevation: 5
+  // },
+
+  // button: {
+  //   borderRadius: 20,
+  //   padding: 10,
+  //   elevation: 2
+  // },
+
+  // buttonOpen: {
+  //   backgroundColor: "#F194FF",
+  // },
+  
+  // buttonClose: {
+  //   backgroundColor: "#2196F3",
+  // },
+
+  // textStyle: {
+  //   color: "white",
+  //   fontWeight: "bold",
+  //   textAlign: "center"
+  // },
+
+  // modalText: {
+  //   marginBottom: 15,
+  //   textAlign: "center"
+  // },
+
+
+
+
 // ----------------------------------
 // -------- INPUT FIELD -------------
+
 
   inputFieldRow:{
     paddingVertical: 10,
@@ -271,9 +379,53 @@ const styles = StyleSheet.create({
   },
 
   
-
+  //---------------------------------------------
   //---------------------------------------------
 
+  listItemOuterCont:{
+    display: 'flex',
+    flexDirection: 'column',
+  },
 
+  listItemContButton:{
+    minWidth:"70%",
+    borderRadius: 5,
+    paddingHorizontal: '5%',
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+
+  listItemInnerButtonCont:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  selectButtonContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+
+  selectItemButton:{
+    display: 'flex',
+    justifyContent:'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    paddingHorizontal:10,
+    paddingVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    width: '30%',
+  },
+  
+  listItemText:{
+    color: FONTCOLORDARK,
+  },
 
 });
