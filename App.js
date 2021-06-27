@@ -16,7 +16,7 @@ const FONTCOLORDARK = "#3b3b3b";
 const INPUTBUTTON = FONTCOLOR;
 
 
-let tempData = [
+const tempData = [
   {id: '321312', destination: 'Germa', itemName: "big mac", quantity: "1", completed: false},
   {id: '43134', destination: 'Liv', itemName: "quater pounder", quantity: "1", completed: false},
   {id: '412341', destination: 'Oliver', itemName: "cheeseburger", quantity: "1", completed: false},
@@ -25,7 +25,12 @@ let tempData = [
   {id: '4341132', destination: 'Eves Bar', itemName: "KFC Family bucket", quantity: "1", completed: false},
 ];
 
-let tempDataCompleted = [
+const tempData2 = [
+  {id: '41324132', destination: 'Hilda', itemName: "Tortalini", quantity: "1", completed: false},
+  {id: '43342132144', destination: 'Garbage', itemName: "Obsidion stone", quantity: "8", completed: false},
+];
+
+const tempDataCompleted = [
   {id: '67465', destination: 'Eves Bar', itemName: "Tap Water Bottles", quantity: "6", completed: true},
   {id: '344523', destination: 'Eves Bar', itemName: "Ice Water Bottles", quantity: "10", completed: true},
   {id: '52342435', destination: 'Camren', itemName: "Spicy Chiken Soup", quantity: "5", completed: true},
@@ -42,8 +47,31 @@ export default function App() {
   const [quantity, setQuantity] = useState()
   const [completed, setCompleted] = useState(false)
 
+  const [dataActive, setDataActive] = useState(tempData)
+
   const [selected , setSelected] = useState(null)
 
+
+  const onPressShow = () => {
+    console.log(id)
+  }
+
+  const onPressInputBtn = () => {
+    // create a new item in same format of original array
+    let newItem = {id: id, destination: destination, itemName: itemName, quantity: quantity, completed: false}
+    // add new item to original array
+    tempData.push(newItem)
+    setDataActive(tempData)
+    //console.log(tempData)
+
+    //check for update in state
+    // if(dataActive === tempData){
+    //   console.log("update to dataActive not found")
+    // }else{
+    //   setDataActive(tempData2)
+    // }
+    
+  }
 
   // functions return JSX 
   const myRenderItem = ({item}) => {
@@ -66,43 +94,37 @@ export default function App() {
     <Text>IEXIST</Text>
   )
 
-  
-  const onPressInputBtn = () => {
-      let newItem = {id: id, destination: destination, itemName: itemName, quantity: quantity, completed: false}
-      tempData.push(newItem)
-  }
+
 
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}> Scribbles </Text>
 
+
      {/* Input Content */}
       {/* Header */}
       <View style={styles.inputFieldRowCenterTitle}>
         <Text>Create Task:</Text>
       </View>
-
-      {/* Temp id row untill it is generated */}
+      {/* Temp id input row untill it is generated */}
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Id:</Text>
         <TextInput 
           style={styles.textInput}
           placeholder="2"
-          onChange={(x) => setId(x)}
+          onChangeText={(value) => setId(value)}
           keyboardType="numeric"
         >
         </TextInput>
       </View>
-
-
       {/* Inputs */}
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Location/person:</Text>
         <TextInput 
           style={styles.textInput}
           placeholder="ZenBar/Monica"
-          onChange={(x) => setDestination(x)}
+          onChangeText={(x) => setDestination(x)}
         >
         </TextInput>
       </View>
@@ -111,7 +133,7 @@ export default function App() {
         <TextInput 
           style={styles.textInput}
           placeholder="Bottled Water"
-          onChange={(x) => setName(x)}
+          onChangeText={(x) => setName(x)}
         >
         </TextInput>
       </View>
@@ -120,12 +142,11 @@ export default function App() {
         <TextInput 
           style={styles.textInput}
           placeholder="2"
-          onChange={(x) => setQuantity(x)}
+          onChangeText={(x) => setQuantity(x)}
           keyboardType="numeric"
         >
         </TextInput>
       </View>
-
       <View style={styles.inputFieldRowCenterButton}>
         <TouchableOpacity 
           style={styles.inputButton}
@@ -134,19 +155,27 @@ export default function App() {
           <Text>Add</Text>
         </TouchableOpacity>
       </View>
+      {/* Temp butn */}
+      <View style={styles.inputFieldRowCenterButton}>
+        <TouchableOpacity 
+          style={styles.inputButton}
+          onPress={onPressShow}
+        >
+          <Text>testing</Text>
+        </TouchableOpacity>
+      </View>
+      {/* ------------ */}
       {/* End inputs section */}
-
-
 
 
        {/* Flat Lists */}
       <Text>-----Active-----</Text>
       <FlatList 
-        data = {tempData}
+        data = {dataActive}
         renderItem={myRenderItem}  // use our listItem component from import instead of renderer
         keyExtractor={item => item.id}
+        updateCellsBatchingPeriod={4000}
       />
-
       <Text>-----Completed-----</Text>
       <FlatList
         data={tempDataCompleted}
