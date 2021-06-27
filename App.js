@@ -6,7 +6,8 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput  } from '
 import { ListItem } from './components/ListItem';
 import { CreateListItem } from './components/CreateListItem';
 
-//import {Const} from "./const";
+// import {Const} from "./const";
+//<Const />
 const ACCENTCOLOR = "orange";
 const BKGCOLOR = "lightgrey";
 const BKGCOLOR2 = "darkgrey";
@@ -35,7 +36,7 @@ let tempDataCompleted = [
 
 
 export default function App() {
-
+  const [id , setId] = useState()
   const [destination, setDestination] = useState()
   const [itemName, setName] = useState()
   const [quantity, setQuantity] = useState()
@@ -46,7 +47,6 @@ export default function App() {
 
   // functions return JSX 
   const myRenderItem = ({item}) => {
-    <Text>{item.completed} hello</Text>
     if(!item.completed){
       //Active items
       return(
@@ -66,40 +66,85 @@ export default function App() {
     <Text>IEXIST</Text>
   )
 
+  
+  const onPressInputBtn = () => {
+      let newItem = {id: id, destination: destination, itemName: itemName, quantity: quantity, completed: false}
+      tempData.push(newItem)
+  }
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}> Scribbles </Text>
 
-      {/* Input Content */}
+     {/* Input Content */}
+      {/* Header */}
       <View style={styles.inputFieldRowCenterTitle}>
         <Text>Create Task:</Text>
       </View>
+
+      {/* Temp id row untill it is generated */}
+      <View style={styles.inputFieldRow}>
+        <Text style={styles.inputFieldRowText}>Id:</Text>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="2"
+          onChange={(x) => setId(x)}
+          keyboardType="numeric"
+        >
+        </TextInput>
+      </View>
+
+
+      {/* Inputs */}
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Location/person:</Text>
-        <TextInput style={styles.textInput}></TextInput>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="ZenBar/Monica"
+          onChange={(x) => setDestination(x)}
+        >
+        </TextInput>
       </View>
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Item name:</Text>
-        <TextInput style={styles.textInput}></TextInput>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="Bottled Water"
+          onChange={(x) => setName(x)}
+        >
+        </TextInput>
       </View>
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Quantity:</Text>
-        <TextInput style={styles.textInput}></TextInput>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="2"
+          onChange={(x) => setQuantity(x)}
+          keyboardType="numeric"
+        >
+        </TextInput>
       </View>
+
       <View style={styles.inputFieldRowCenterButton}>
-        <TouchableOpacity style={styles.inputButton}>Add</TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.inputButton}
+          onPress={onPressInputBtn}
+        >
+          <Text>Add</Text>
+        </TouchableOpacity>
       </View>
+      {/* End inputs section */}
 
 
-      <View >
-        <Text>-----Active-----</Text>
-      </View>
 
-      {/* Flat List */}
+
+       {/* Flat Lists */}
+      <Text>-----Active-----</Text>
       <FlatList 
         data = {tempData}
         renderItem={myRenderItem}  // use our listItem component from import instead of renderer
-        keyExtractor={myItem => myItem.id}
+        keyExtractor={item => item.id}
       />
 
       <Text>-----Completed-----</Text>
@@ -108,9 +153,9 @@ export default function App() {
         renderItem={myRenderItem}
         keyExtractor={x => x.id}
       />
-    
-
     </View>
+
+
   );
 }
 
@@ -150,6 +195,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: 'row',
     justifyContent: "center",
+    alignItems: 'center',
   },
 
   inputFieldRowCenterTitle:{
@@ -179,8 +225,10 @@ const styles = StyleSheet.create({
   textInput: {
     backgroundColor: FONTCOLOR,
     color: FONTCOLORDARK,
+    padding: 5,
     borderRadius: 5,
-    maxWidth: 'auto',
+    width: 120,
+
   },
 
   inputButton:{

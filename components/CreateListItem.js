@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal, Alert, Pressable} from 'react-native'
 
 const ACCENTCOLOR = "grey";
 const BKGCOLOR = "lightgrey";
@@ -12,27 +12,26 @@ const INPUTBUTTON = FONTCOLOR;
 const windowWidth = Dimensions.get('window').width;
 const widthNeg10 = windowWidth*.90;
 
-// given props item={item} bkgColor={"someColor"} isCompleted={false}
+// given props item={item} bkgColor={"someColor"} isComplete={false}
 export const CreateListItem = (props) => {
     // const [counter, setCounter] = useState(0)
+    // const [modalVisible, setModalVisible] = useState(false)
 
 
-    const onPress = () => {
-        // setCounter(counter + 1)
-
-        // launch modal with options 
-        if(isCompleted){
-            //modal 1
-        }else{
-            // modal 2
-        }
+    const onPressShowBtns = () => {
+        // do somthing 
+        // if(props.isComplete){
+        //     setModalCompleteVisable(True)
+        // }else{
+        //     setModalCompleteVisable(True)
+        // }
     }
 
     return(
         <View style={{width: widthNeg10}}>
             <TouchableOpacity  
             style={styles.listItemButton} 
-            onPress={onPress}
+            onPress={onPressShowBtns}
             >
                 <View style={[styles.listItemCont, {backgroundColor: props.bkgColor}]}>
                     {/* <Text>Width:{widthNeg10}</Text> */}
@@ -50,6 +49,61 @@ export const CreateListItem = (props) => {
 
 
 const styles = StyleSheet.create({
+
+    //------------------------------
+    //--------- MODAL DOCS PAPGE ---------------------
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+    },
+
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+    },
+
+
+    //--------------------------------
+    //--------------------------------
+
     listItemButton:{
         width: "100%",
         // Used padding instead of margin due to it 
