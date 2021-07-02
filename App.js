@@ -9,23 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ListItemMain} from './components/ListItemMain';
 import Theme from './components/Theme';
 
-// An array with an associate array within it
-// const tempData = [
-//   {id: '321312', destination: 'Germa', itemName: "big mac", quantity: "1", completed: false},
-//   {id: '43134', destination: 'Liv', itemName: "quater pounder", quantity: "1", completed: false},
-//   {id: '412341', destination: 'Oliver', itemName: "cheeseburger", quantity: "1", completed: false},
-//   {id: '143241', destination: 'Michael', itemName: "Fish n Chips", quantity: "3", completed: false},
-//   {id: '132432', destination: 'New Port Arms hotel', itemName: "Cesar salad", quantity: "5", completed: false},
-//   {id: '4341132', destination: 'Eves Bar', itemName: "KFC Family bucket", quantity: "1", completed: false},
-// ];
 
-// const tempDataCompleted = [
-//   {id: '67465', destination: 'Eves Bar', itemName: "Tap Water Bottles", quantity: "6", completed: true},
-//   {id: '344523', destination: 'Eves Bar', itemName: "Ice Water Bottles", quantity: "10", completed: true},
-//   {id: '52342435', destination: 'Camren', itemName: "Spicy Chiken Soup", quantity: "5", completed: true},
-//   {id: '253462', destination: 'Louise', itemName: "Pesto Pasta", quantity: "1", completed: true},
-//   {id: '7564756', destination: 'Eves Bar', itemName: "Tooheys New kegs", quantity: "6", completed: true},
-// ];
+// Current Data Structure / An array with an associate array within it
+// const data = [
+//   {id: '7564756', destination: 'Eves Bar', itemName: "Tooheys New kegs", quantity: "6", isComplete: true},
+//   {id: '132313123', destination: 'James', itemName: "KFC", quantity: "4", isComplete: false},
+// ]
+
 
 const windowWidth = Dimensions.get('window').width;
 const widthNeg10 = windowWidth*.90;
@@ -37,9 +27,7 @@ export default function App() {
   const [itemName, setName] = useState()
   const [quantity, setQuantity] = useState()
 
-  const [dataCombined, setDataCombined] = useState([])
-  const [dataActive, setDataActive] = useState([])
-  const [dataCompleted, setDataCompleted] = useState([])
+  const [data, setData] = useState([])
   const [itemSelected , setItemSelected] = useState(null)
 
   //updater this is just gonna flip back and forth between on an off 
@@ -56,58 +44,32 @@ export default function App() {
     if(isfirstRun){
       setIsFirstRun(false)
       getAsyncStorage() 
-
-      //wait 1 sec
-      // do somthing
-      setTimeout(tryCombine, 1000)
-      //setDataCombined(dataActive.concat(dataCompleted))
     }
 
-    if(quantity == 99){
+    if(quantity == 1011011010){
       setQuantity(0)
       console.log("super secret btn")
-      //let tempArr = dataActive.concat(dataCompleted)
-      setDataCombined(dataActive.concat(dataCompleted))
-      console.log(dataCombined.lenght)
+      
     }
-
-    if(dataCombined.lenght == 0){
-      setDataCombined(dataActive.concat(dataCompleted))
-    }
-
 
   })
 
-  const tryCombine = () => {
-    // console.log("hello")
-    // let tempArr = dataActive.concat(dataCompleted)
-    // setDataCombined((dataActive.concat(dataCompleted)))
-    // setUpdater(!updater)
-    // console.log(dataCombined)
-  }
+
+
+
 
   // STORAGE / DB control ---------------------------------
   //-------------------------------------------------------
 
   const setAsyncStorage = () => {
-    if(dataActive.length > 0 || dataCompleted.length > 0){
-
+    if(data.length > 0){
       // Update Active Data
-      AsyncStorage.setItem( 'dataActive' ,JSON.stringify(dataActive) )
+      AsyncStorage.setItem( 'data' ,JSON.stringify(data) )
       .then( () => { 
-        console.log('dataActive stored')
+        console.log('data stored')
       })
       .catch( (error) => {
-        console.log("dataActive Store Error: " + error)
-      })
-
-      //Update Completed Data
-      AsyncStorage.setItem( 'dataCompleted' ,JSON.stringify(dataCompleted) )
-      .then( () => { 
-        console.log('dataCompleted stored')
-      })
-      .catch( (error) => {
-        console.log("dataCompleted Store Error: " + error)
+        console.log("data Store Error: " + error)
       })
 
     }
@@ -117,45 +79,21 @@ export default function App() {
   // Only get from storage once when the app loads
   // OnFirstRun component handels this...
   const getAsyncStorage = (props) => {
-
-    //get active data
-    AsyncStorage.getItem('dataActive')
+    //get data
+    AsyncStorage.getItem('data')
     .then( (value) => {
       if( value ) {
       const items = JSON.parse(value)
-      setDataActive( items )
-      
+      setData( items )
     }
     else {
-      console.log('dataActive has no data')
+      console.log('no data found')
     }
     })
     .catch( (error) => {
       console.log(error)
     })
-
-
-    //get completed data
-    AsyncStorage.getItem('dataCompleted')
-    .then( (value) => {
-      if( value ) {
-      const items = JSON.parse(value)
-      setDataCompleted( items )
-      console.log("dataCompleted data found")
-    }
-    else {
-      console.log('dataCompleted has no data')
-    }
-    })
-    .catch( (error) => {
-      console.log(error)
-    })
-
-
   }
-
-
-
 
 
   
@@ -165,13 +103,12 @@ export default function App() {
     if(isNaN(quantity)){
       console.log("quantity is not a number: " + quantity)
     }else{
-      // create a new item in same format of original array  ("Associate array")
-      let newItem = {id: Date.now().toString(), destination: destination, itemName: itemName, quantity: quantity, completed: false}
+      // create a new item in same format of original array
+      let newItem = {id: Date.now().toString(), destination: destination, itemName: itemName, quantity: quantity, isComplete: false}
       
-      let tempArr = dataActive
+      let tempArr = data
       tempArr.unshift(newItem)
-      setDataActive(tempArr)
-      //console.log(dataActive)
+      setData(tempArr)
 
       setUpdater(!updater)  
       // I include updater due to setDataActive(newArray) 
@@ -181,7 +118,6 @@ export default function App() {
       setAsyncStorage()
 
     }
-
   }
 
 
@@ -195,13 +131,13 @@ export default function App() {
     if(itemSelected === item.id){
       color = Theme.ACCENTCOLOR;
       isSelected = true;
-    }else if(!item.completed){
+    }else if(!item.isComplete){
       color = Theme.BKGCOLOR
     }
 
     return(
       //Create items
-      <CreateListItem item={item} bkgColor={color} isComplete={item.completed} isSelected={isSelected}/>
+      <CreateListItem item={item} bkgColor={color} isComplete={item.isComplete} isSelected={isSelected}/>
     )
   }
 
@@ -216,103 +152,34 @@ export default function App() {
         setItemSelected(props.item.id)
     }
 
-
-
     const onPressItemStatusChange = () => {
       if (itemSelected == null){
         console.log("ERROR item change status itemSelected not set")
-
       }else{
-        let isWithinDataActive = false
-        let tempItem = null
-        let tempArr = null
-
         //Find Item 
-        //    - identify origin Arr
-        //    - create tempItem 
-        //    - delete original item
-        //    - setTempItem
-        //    - update opposing array 
-
-        if(dataActive.length > 0){  // if lenght == 0 dataActive[i].id == undefined
-          for (let i = 0; i < dataActive.length; i++){
-            if(dataActive[i].id == itemSelected){
-              isWithinDataActive = true
-              
-              //Update This array
-              tempItem = dataActive[i]
-              tempArr = dataActive
-              tempArr.splice(i,1); //deletes starting from index i by ammount 1
-              setDataActive(tempArr)   
-
-              //add tempItem to opposing list
-              tempItem.completed = true
-              tempArr = dataCompleted
-              tempArr.unshift(tempItem)
-              setDataCompleted(tempArr)
-
-              //remove selection
-              setItemSelected(null)
-
-            }
+        //    - change isComplete to !isComplete
+        //    - storage Update
+        data.forEach(element => {
+          if(element.id == itemSelected){
+            element.isComplete = !element.isComplete
           }
-        }
-
-        // not found in dataActive (Inverse of above essentially)
-        if(!isWithinDataActive){ //dont run if item found already
-
-          if(dataCompleted.length > 0){
-            for (let i = 0; i < dataCompleted.length; i++){
-              if(dataCompleted[i].id == itemSelected){
-                
-                //Update This array
-                tempItem = dataCompleted[i]
-                tempArr = dataCompleted
-                tempArr.splice(i,1);
-                setDataCompleted(tempArr)   
-      
-                //add tempItem to opposing list
-                tempItem.completed = false
-                tempArr = dataActive
-                tempArr.unshift(tempItem)
-                setDataActive(tempArr)
-
-                //remove selection
-                setItemSelected(null)
-      
-              }
-            }
-          }
-
-        }else{
-          console.log("not found in either array")
-        }
-        
+        });
         //Once changes have been made update storage
         setAsyncStorage()
-
       }
     }
 
-
-
     const onPressItemDelete  = () => {
-
-      let isWithinDataActive = false
-      let tempArr = null
-
       //Find Item 
-      //    - identify origin Arr
-      //    - delete original item
-      if(dataActive.length > 0){
-        for (let i = 0; i < dataActive.length; i++){
-          if(dataActive[i].id == itemSelected){
-            isWithinDataActive = true
-            
+      //    - delete item
+      //    - storage Update
+      if(data.length > 0){
+        for (let i = 0; i < data.length; i++){
+          if(data[i].id == itemSelected){
             //Delete from this array
-            tempArr = dataActive
+            let tempArr = data
             tempArr.splice(i,1);
-            setDataActive(tempArr)   
+            setData(tempArr)   
   
             //remove selection
             setItemSelected(null)
@@ -320,36 +187,11 @@ export default function App() {
           }
         }
       }
-      
-
-      // not found in dataActive
-      if(!isWithinDataActive){ 
-
-        if(dataCompleted.length > 0){
-          for (let i = 0; i < dataCompleted.length; i++){
-            if(dataCompleted[i].id == itemSelected){
-              
-              //Delete from this array
-              tempArr = dataCompleted
-              tempArr.splice(i,1);
-              setDataCompleted(tempArr)   
-
-              //remove selection
-              setItemSelected(null)
-    
-            }
-          }
-        }
-
-      }
 
       //once deletes made update storage
       setAsyncStorage()
 
     }
-
-
-
 
     const ListItemMain = () => (
       <TouchableOpacity  
@@ -458,27 +300,12 @@ export default function App() {
       {/* Flat Lists */}
       <Text>-----Active-----</Text>
       <FlatList 
-          data={dataActive}
+          data={data}
           renderItem={myRenderItem}  // use our listItem component from import instead of renderer
           keyExtractor={item => item.id}
           extraData={[itemSelected, updater]}
       />
 
-      <Text>-----Completed-----</Text>
-      <FlatList
-            data={dataCompleted}
-            renderItem={myRenderItem}
-            keyExtractor={x => x.id}
-            extraData={[itemSelected, updater]}
-      />
-
-      {/* <Text>-----Combined-----</Text>
-      <FlatList
-            data={dataCombined}
-            renderItem={myRenderItem}
-            keyExtractor={x => x.id}
-            extraData={[itemSelected, updater]}
-      /> */}
 
 
     </View>
