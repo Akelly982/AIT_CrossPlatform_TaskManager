@@ -31,15 +31,13 @@ const windowWidth = Dimensions.get('window').width;
 const widthNeg10 = windowWidth*.90;
 
 
-
-
-
 export default function App() {
   const [isfirstRun, setIsFirstRun] = useState(true)
   const [destination, setDestination] = useState()
   const [itemName, setName] = useState()
   const [quantity, setQuantity] = useState()
 
+  const [dataCombined, setDataCombined] = useState([])
   const [dataActive, setDataActive] = useState([])
   const [dataCompleted, setDataCompleted] = useState([])
   const [itemSelected , setItemSelected] = useState(null)
@@ -57,11 +55,39 @@ export default function App() {
 
     if(isfirstRun){
       setIsFirstRun(false)
-      getAsyncStorage()
+      getAsyncStorage() 
+
+      //wait 1 sec
+      // do somthing
+      setTimeout(tryCombine, 1000)
+      //setDataCombined(dataActive.concat(dataCompleted))
     }
+
+    if(quantity == 99){
+      setQuantity(0)
+      console.log("super secret btn")
+      //let tempArr = dataActive.concat(dataCompleted)
+      setDataCombined(dataActive.concat(dataCompleted))
+      console.log(dataCombined.lenght)
+    }
+
+    if(dataCombined.lenght == 0){
+      setDataCombined(dataActive.concat(dataCompleted))
+    }
+
 
   })
 
+  const tryCombine = () => {
+    // console.log("hello")
+    // let tempArr = dataActive.concat(dataCompleted)
+    // setDataCombined((dataActive.concat(dataCompleted)))
+    // setUpdater(!updater)
+    // console.log(dataCombined)
+  }
+
+  // STORAGE / DB control ---------------------------------
+  //-------------------------------------------------------
 
   const setAsyncStorage = () => {
     if(dataActive.length > 0 || dataCompleted.length > 0){
@@ -91,7 +117,6 @@ export default function App() {
   // Only get from storage once when the app loads
   // OnFirstRun component handels this...
   const getAsyncStorage = (props) => {
-    setIsFirstRun(false)
 
     //get active data
     AsyncStorage.getItem('dataActive')
@@ -99,6 +124,7 @@ export default function App() {
       if( value ) {
       const items = JSON.parse(value)
       setDataActive( items )
+      
     }
     else {
       console.log('dataActive has no data')
@@ -107,8 +133,6 @@ export default function App() {
     .catch( (error) => {
       console.log(error)
     })
-
-
 
 
     //get completed data
@@ -194,8 +218,6 @@ export default function App() {
 
 
 
-
-
     const onPressItemStatusChange = () => {
       if (itemSelected == null){
         console.log("ERROR item change status itemSelected not set")
@@ -271,9 +293,6 @@ export default function App() {
 
       }
     }
-
-
-
 
 
 
@@ -380,19 +399,21 @@ export default function App() {
 
 
 
+  
   // MAIN RETURN 
   return (
-    <ScrollView>
-      <View style={styles.container}>
+
+    <View style={styles.container}>
+
+      {/* Title */}
       <Text style={styles.header}> Scribbles </Text>
+
 
       {/* Input Content */}
       {/* Header */}
       <View style={styles.inputFieldRowCenterTitle}>
         <Text>Create Task:</Text>
       </View>
-
-
       {/* Inputs */}
       <View style={styles.inputFieldRow}>
         <Text style={styles.inputFieldRowText}>Location/person:</Text>
@@ -434,26 +455,40 @@ export default function App() {
 
 
 
-
       {/* Flat Lists */}
       <Text>-----Active-----</Text>
       <FlatList 
-        data={dataActive}
-        renderItem={myRenderItem}  // use our listItem component from import instead of renderer
-        keyExtractor={item => item.id}
-        extraData={[itemSelected, updater]}
+          data={dataActive}
+          renderItem={myRenderItem}  // use our listItem component from import instead of renderer
+          keyExtractor={item => item.id}
+          extraData={[itemSelected, updater]}
       />
+
       <Text>-----Completed-----</Text>
       <FlatList
-        data={dataCompleted}
-        renderItem={myRenderItem}
-        keyExtractor={x => x.id}
-        extraData={[itemSelected, updater]}
+            data={dataCompleted}
+            renderItem={myRenderItem}
+            keyExtractor={x => x.id}
+            extraData={[itemSelected, updater]}
       />
+
+      {/* <Text>-----Combined-----</Text>
+      <FlatList
+            data={dataCombined}
+            renderItem={myRenderItem}
+            keyExtractor={x => x.id}
+            extraData={[itemSelected, updater]}
+      /> */}
+
+
     </View>
-    </ScrollView>
   );
 }
+
+
+
+
+
 
 const styles = StyleSheet.create({
 
@@ -479,66 +514,6 @@ const styles = StyleSheet.create({
     color: Theme.FONTCOLOR,
     fontWeight: 'bold',
   },
-
-
-// ----------------------------------
-// -------- Modal -------------------
-
-  // modalOverlayOpacityBkg: {
-  //   position: 'absolute',
-  //   backgroundColor: '#3b3b3b',
-  //   zIndex: 99,
-  // },
-
-
-
-  // centeredView: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   marginTop: 22
-  // },
-
-  // modalView: {
-  //   margin: 20,
-  //   backgroundColor: "white",
-  //   borderRadius: 20,
-  //   padding: 35,
-  //   alignItems: "center",
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 4,
-  //   elevation: 5
-  // },
-
-  // button: {
-  //   borderRadius: 20,
-  //   padding: 10,
-  //   elevation: 2
-  // },
-
-  // buttonOpen: {
-  //   backgroundColor: "#F194FF",
-  // },
-  
-  // buttonClose: {
-  //   backgroundColor: "#2196F3",
-  // },
-
-  // textStyle: {
-  //   color: "white",
-  //   fontWeight: "bold",
-  //   textAlign: "center"
-  // },
-
-  // modalText: {
-  //   marginBottom: 15,
-  //   textAlign: "center"
-  // },
 
 
 
