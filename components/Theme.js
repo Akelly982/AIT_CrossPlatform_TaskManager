@@ -1,20 +1,102 @@
 
-export const Theme = {
-    tealBlue: 'hsla(199, 32%, 45%, 1)',
+const accent = '#535f6b'
+const accent2 = '#A6A3CC'
+const textLight = "#e8e8e8"
+const textDark = "#3b3b3b"
 
-    ACCENTCOLOR: "orange",
-    WARNINGCOLOR: "#a05353",
-    BKGCOLOR: "lightgrey",
-    BKGCOLOR2: "darkgrey",
-    FONTCOLOR: "#e8e8e8",
-    FONTCOLORDARK: "#3b3b3b",
-    INPUTBUTTON: "#e8e8e8",
+export const Theme = {
+    // tealBlue: 'hsla(199, 32%, 45%, 1)',
+
+    // BKGCOLORMAIN: "#e8e8e8", 
+    // ACCENTCOLOR: "#24292E",
+
+    // WARNINGCOLOR: "#a05353",  // light red
+
+    // BKGCOLOR: "#B8B4B4", 
+    // BKGCOLOR2: "#807C7C",
+
+    // FIELDTEXT: "#0368DA",
+    // FONTCOLOR: "#e8e8e8",
+    // FONTCOLORDARK: "#3b3b3b",
+
+    // INPUTBUTTON: "#726da8ff",
+    //-----
+    
+    bkgColorAppTitle: accent,
+    bkgColorTop: "#FFFFFF",
+    bkgColorBottom: "#F6F8FA",
+    bkgColorSpacer: accent,
+    bkgColorInputField: textLight,
+    bkgColorInputBtn: accent2,
+
+    textAppTitle: accent2,
+    textSpacer: textLight,
+    textInputBtn: textLight,
+    textInputField: textDark,
+    textInputFieldLabel: textDark,
+    textLight: textLight,
+    textDark: textDark,
+
+    //Item Btns
+    bkgColorItemInComplete: '#535f6b',
+    bkgColorItemComplete: textDark,
+    bkgColorSelectedBtn: accent2,
+    // On select shown btns
+    bkgColorItemBtn1: accent2,
+    bkgColorWarningBtn: "#a05353",
+    textWarningBtn: textLight,
+    textItemBtn1: textLight,
+
+
+
+
+
   }
   export default Theme
 
+  // lighter navy blue #535f6b
+  //Navy Blue      #24292E
+  //Link Bright blue    #0368DA 
+
+  //bright white    #FFFFFF 
+  //dull white      #F6F8FA
+  //Btn1            #2C974B
+
+
+
+
+// /* CSS HEX */
+// --nyanza: #dff2d8ff;
+// --tea-green: #c6dea6ff;
+// --middle-blue: #7ebdc3ff;
+// --deep-taupe: #7a6263ff;
+// --sage: #ced097ff;
+
+// /* CSS HSL */
+// --nyanza: hsla(104, 50%, 90%, 1);
+// --tea-green: hsla(86, 46%, 76%, 1);
+// --middle-blue: hsla(185, 37%, 63%, 1);
+// --deep-taupe: hsla(358, 11%, 43%, 1);
+// --sage: hsla(62, 38%, 70%, 1);
 
 
 
 
 
 
+
+
+// /* CSS HEX */
+// --eggplant: #594157ff;                       // Darkest
+// --dark-blue-gray: #726da8ff;  Accent
+// --glaucous: #7d8cc4ff;
+// --light-blue: #a0d2dbff;
+// --powder-blue: #bee7e8ff;                    // Lightess
+
+
+// /* CSS HSL */
+// --eggplant: hsla(305, 16%, 30%, 1);
+// --dark-blue-gray: hsla(245, 25%, 54%, 1);
+// --glaucous: hsla(227, 38%, 63%, 1);
+// --light-blue: hsla(189, 45%, 74%, 1);
+// --powder-blue: hsla(181, 48%, 83%, 1);

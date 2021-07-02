@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import {useState , useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Dimensions, Modal, ImageBackground, Pressable, ScrollView, VirtualizedList } from 'react-native';
+import {useState , useEffect, useMemo} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Dimensions} from 'react-native';
+import {Modal, ImageBackground, Pressable, ScrollView, VirtualizedList} from 'react-native';
 
 //AsynStorage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {ListItemMain} from './components/ListItemMain';
+//import {ListItemMain} from './components/ListItemMain';
 import Theme from './components/Theme';
 
 
@@ -21,7 +22,11 @@ const windowWidth = Dimensions.get('window').width;
 const widthNeg10 = windowWidth*.90;
 
 
+
+
+
 export default function App() {
+
   const [isfirstRun, setIsFirstRun] = useState(true)
   const [destination, setDestination] = useState()
   const [itemName, setName] = useState()
@@ -125,14 +130,14 @@ export default function App() {
   const myRenderItem = ({item}) => {
 
     //setup data for each item before creating item
-    let color =  Theme.BKGCOLOR2  // least likely option's
+    let color =  Theme.bkgColorItemInComplete  // least likely option's 
     let isSelected = false;   
 
     if(itemSelected === item.id){
-      color = Theme.ACCENTCOLOR;
+      color = Theme.bkgColorSelectedBtn
       isSelected = true;
     }else if(!item.isComplete){
-      color = Theme.BKGCOLOR
+      color = Theme.bkgColorItemComplete
     }
 
     return(
@@ -153,8 +158,9 @@ export default function App() {
     }
 
     const onPressItemStatusChange = () => {
+
       if (itemSelected == null){
-        console.log("ERROR item change status itemSelected not set")
+        console.log("ERROR on item change status itemSelected not set")
       }else{
         //Find Item 
         //    - change isComplete to !isComplete
@@ -163,27 +169,38 @@ export default function App() {
           if(element.id == itemSelected){
             element.isComplete = !element.isComplete
           }
+
         });
+
+        // deselect Item
+        setItemSelected(null)
+
         //Once changes have been made update storage
         setAsyncStorage()
+
       }
     }
 
     const onPressItemDelete  = () => {
-      //Find Item 
-      //    - delete item
-      //    - storage Update
-      if(data.length > 0){
-        for (let i = 0; i < data.length; i++){
-          if(data[i].id == itemSelected){
-            //Delete from this array
-            let tempArr = data
-            tempArr.splice(i,1);
-            setData(tempArr)   
-  
-            //remove selection
-            setItemSelected(null)
-  
+
+      if (itemSelected == null){ 
+        console.log("ERROR on item delete itemSelected not set")
+      }else{
+        //Find Item 
+        //    - delete item
+        //    - storage Update
+        if(data.length > 0){
+          for (let i = 0; i < data.length; i++){
+            if(data[i].id == itemSelected){
+              //Delete from this array
+              let tempArr = data
+              tempArr.splice(i,1);
+              setData(tempArr)   
+    
+              //remove selection
+              setItemSelected(null)
+    
+            }
           }
         }
       }
@@ -198,7 +215,6 @@ export default function App() {
             style={[styles.listItemContButton, {backgroundColor: props.bkgColor}]}
             onPress={onPressItem}
             >
-                    {/* <Text>Width:{widthNeg10}</Text> */}
                     <Text style={styles.listItemText}>{props.item.destination}</Text>
                     <View style={styles.listItemInnerButtonCont}>
                         <Text style={styles.listItemText}>{props.item.itemName}</Text>
@@ -209,27 +225,27 @@ export default function App() {
 
     if(props.isSelected == false){
       return(
-        <View style={[styles.listItemOuterCont,{width: widthNeg10}]}>
+        <View style={styles.listItemOuterCont}>
             {/* <ListItemMain item={props.item} bkgColor={color} btn={onPressItem}/>  */}
             <ListItemMain />
         </View>
       )
     }else{
       return(
-        <View style={[styles.listItemOuterCont,{width: widthNeg10}]}>
+        <View style={styles.listItemOuterCont}>
             <ListItemMain />
             <View style={styles.selectButtonContainer}>
               <TouchableOpacity
-                style={[styles.selectItemButton,{backgroundColor: Theme.ACCENTCOLOR}]}
+                style={[styles.selectItemButton,{backgroundColor: Theme.bkgColorItemBtn1}]}
                 onPress={onPressItemStatusChange}
               >
-                <Text>Change Status</Text>
+                <Text style={{color: Theme.textItemBtn1}}>Change Status</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.selectItemButton,{backgroundColor: Theme.WARNINGCOLOR}]}
+                style={[styles.selectItemButton,{backgroundColor: Theme.bkgColorWarningBtn}]}
                 onPress={onPressItemDelete}
               >
-                <Text>Delete</Text>
+                <Text style={{color: Theme.textWarningBtn}}>Delete</Text>
               </TouchableOpacity>
             </View>
         </View>
@@ -240,18 +256,16 @@ export default function App() {
 
 
 
-
   
-  // MAIN RETURN 
+  
+  //MAIN RETURN 
   return (
-
-    <View style={styles.container}>
-
+    <View style={styles.bkgColorMain}>
+      
       {/* Title */}
-      <Text style={styles.header}> Scribbles </Text>
+      <Text style={styles.appTitle}> Scribbles </Text>
 
-
-      {/* Input Content */}
+      {/* Input Content
       {/* Header */}
       <View style={styles.inputFieldRowCenterTitle}>
         <Text>Create Task:</Text>
@@ -291,25 +305,29 @@ export default function App() {
           style={styles.inputButton}
           onPress={addItemBtn}
         >
-          <Text>Add</Text>
+          <Text style={{ color: Theme.textInputBtn}}>Add</Text>
         </TouchableOpacity>
       </View>
 
 
 
+      <View style={styles.spacer}>
+        <Text style={styles.spacerText}>---------- Tasks ----------</Text>
+      </View>
+
       {/* Flat Lists */}
-      <Text>-----Active-----</Text>
       <FlatList 
           data={data}
           renderItem={myRenderItem}  // use our listItem component from import instead of renderer
           keyExtractor={item => item.id}
           extraData={[itemSelected, updater]}
+          //ListHeaderComponent={HeaderComponent}
       />
-
-
-
     </View>
   );
+
+
+
 }
 
 
@@ -319,28 +337,41 @@ export default function App() {
 
 const styles = StyleSheet.create({
 
-  spacer:{
-    backgroundColor: "#3b3b3b",
+  bkgColorMain: {
+    backgroundColor: Theme.bkgColorBottom,
   },
+
+  spacer:{
+    backgroundColor: Theme.bkgColorSpacer,
+    display:'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  spacerText:{
+    fontSize: 15,
+    color: Theme.textSpacer,
+    paddingVertical: 10
+  },
+
+
 
   container: {
     display: 'flex',
-    // backgroundColor: 'red',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    //marginHorizontal: 10,
   },
 
-  header: {
-    backgroundColor: Theme.ACCENTCOLOR,
+  appTitle: {
+    paddingTop: 30,
+    backgroundColor: Theme.bkgColorAppTitle,
     paddingVertical: 15,
     width: '100%',
     textAlign: 'center',
     fontSize: 30,
-    color: Theme.FONTCOLOR,
+    color: Theme.textAppTitle,
     fontWeight: 'bold',
   },
+
 
 
 
@@ -350,20 +381,19 @@ const styles = StyleSheet.create({
 
 
   inputFieldRow:{
-    paddingVertical: 10,
-    paddingHorizontal: '20%',
-    backgroundColor: Theme.BKGCOLOR,
-    width: '100%',
+    backgroundColor: Theme.bkgColorTop,
     display: "flex",
     flexDirection: 'row',
     justifyContent: "center",
     alignItems: 'center',
+    paddingVertical: 10,
+    width: "100%",
   },
 
   inputFieldRowCenterTitle:{
     paddingTop: 10,
     paddingBottom: 2,
-    backgroundColor: Theme.BKGCOLOR,
+    backgroundColor: Theme.bkgColorTop,
     width: '100%',
     display: "flex",
     flexDirection: 'row',
@@ -372,8 +402,8 @@ const styles = StyleSheet.create({
 
   inputFieldRowCenterButton:{
     paddingTop: 5,
-    paddingBottom: 10,
-    backgroundColor: Theme.BKGCOLOR,
+    paddingBottom: 20,
+    backgroundColor: Theme.bkgColorTop,
     width: '100%',
     display: "flex",
     flexDirection: 'row',
@@ -382,11 +412,12 @@ const styles = StyleSheet.create({
 
   inputFieldRowText:{
     paddingRight: 10,
+    color: Theme.textInputFieldLabel,
   },
 
   textInput: {
-    backgroundColor: Theme.FONTCOLOR,
-    color: Theme.FONTCOLORDARK,
+    backgroundColor: Theme.bkgColorInputField,
+    color: Theme.textInputField,
     padding: 5,
     borderRadius: 5,
     width: 120,
@@ -395,7 +426,7 @@ const styles = StyleSheet.create({
 
   inputButton:{
     paddingVertical: 10,
-    backgroundColor: Theme.INPUTBUTTON,
+    backgroundColor: Theme.bkgColorInputBtn,
     width: 100,
     display: "flex",
     flexDirection: 'row',
@@ -405,15 +436,18 @@ const styles = StyleSheet.create({
 
   
   //---------------------------------------------
-  //---------------------------------------------
+  //-----------LISTITEM----------------------------------
 
   listItemOuterCont:{
     display: 'flex',
     flexDirection: 'column',
+    alignSelf: 'center',
+    width: '70%',
+    // backgroundColor: "yellow",
   },
 
   listItemContButton:{
-    minWidth:"70%",
+    width: '100%',
     borderRadius: 5,
     paddingHorizontal: '5%',
     height: 50,
@@ -421,7 +455,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 10,
     marginVertical: 10,
   },
 
@@ -450,7 +483,11 @@ const styles = StyleSheet.create({
   },
   
   listItemText:{
-    color: Theme.FONTCOLORDARK,
+    color: Theme.textLight,
   },
+
+  listItemTextLight:{
+    color: Theme.textDark,
+  }
 
 });
