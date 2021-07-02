@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ListItemMain} from './components/ListItemMain';
 import Theme from './components/Theme';
 
-// An array with an associate array within it
+
 // const tempData = [
 //   {id: '321312', destination: 'Germa', itemName: "big mac", quantity: "1", completed: false},
 //   {id: '43134', destination: 'Liv', itemName: "quater pounder", quantity: "1", completed: false},
@@ -60,6 +60,7 @@ export default function App() {
       getAsyncStorage()
     }
 
+
   })
 
 
@@ -75,6 +76,7 @@ export default function App() {
         console.log("dataActive Store Error: " + error)
       })
 
+
       //Update Completed Data
       AsyncStorage.setItem( 'dataCompleted' ,JSON.stringify(dataCompleted) )
       .then( () => { 
@@ -87,7 +89,6 @@ export default function App() {
     }
   }
 
-
   // Only get from storage once when the app loads
   // OnFirstRun component handels this...
   const getAsyncStorage = (props) => {
@@ -99,6 +100,8 @@ export default function App() {
       if( value ) {
       const items = JSON.parse(value)
       setDataActive( items )
+      console.log("dataActive data found")
+      console.log(dataActive)
     }
     else {
       console.log('dataActive has no data')
@@ -110,7 +113,6 @@ export default function App() {
 
 
 
-
     //get completed data
     AsyncStorage.getItem('dataCompleted')
     .then( (value) => {
@@ -118,6 +120,7 @@ export default function App() {
       const items = JSON.parse(value)
       setDataCompleted( items )
       console.log("dataCompleted data found")
+      console.log(dataCompleted)
     }
     else {
       console.log('dataCompleted has no data')
@@ -126,7 +129,6 @@ export default function App() {
     .catch( (error) => {
       console.log(error)
     })
-
 
   }
 
@@ -186,150 +188,24 @@ export default function App() {
   //Is here due to connection to useState's
   const CreateListItem = (props) => {
 
-
     const onPressItem = () => {
         // console.log('Thy pressed me : ' + props.item.id )
         setItemSelected(props.item.id)
     }
 
-
-
-
-
     const onPressItemStatusChange = () => {
-      if (itemSelected == null){
-        console.log("ERROR item change status itemSelected not set")
+      console.log("changeStatus" + itemSelected)
 
-      }else{
-        let isWithinDataActive = false
-        let tempItem = null
-        let tempArr = null
 
-        //Find Item 
-        //    - identify origin Arr
-        //    - create tempItem 
-        //    - delete original item
-        //    - setTempItem
-        //    - update opposing array 
-
-        if(dataActive.length > 0){  // if lenght == 0 dataActive[i].id == undefined
-          for (let i = 0; i < dataActive.length; i++){
-            if(dataActive[i].id == itemSelected){
-              isWithinDataActive = true
-              
-              //Update This array
-              tempItem = dataActive[i]
-              tempArr = dataActive
-              tempArr.splice(i,1); //deletes starting from index i by ammount 1
-              setDataActive(tempArr)   
-
-              //add tempItem to opposing list
-              tempItem.completed = true
-              tempArr = dataCompleted
-              tempArr.unshift(tempItem)
-              setDataCompleted(tempArr)
-
-              //remove selection
-              setItemSelected(null)
-
-            }
-          }
-        }
-
-        // not found in dataActive (Inverse of above essentially)
-        if(!isWithinDataActive){ //dont run if item found already
-
-          if(dataCompleted.length > 0){
-            for (let i = 0; i < dataCompleted.length; i++){
-              if(dataCompleted[i].id == itemSelected){
-                
-                //Update This array
-                tempItem = dataCompleted[i]
-                tempArr = dataCompleted
-                tempArr.splice(i,1);
-                setDataCompleted(tempArr)   
-      
-                //add tempItem to opposing list
-                tempItem.completed = false
-                tempArr = dataActive
-                tempArr.unshift(tempItem)
-                setDataActive(tempArr)
-
-                //remove selection
-                setItemSelected(null)
-      
-              }
-            }
-          }
-
-        }else{
-          console.log("not found in either array")
-        }
+      // dataActive.forEach(item => {
         
-        //Once changes have been made update storage
-        setAsyncStorage()
+      // })
 
-      }
     }
-
-
-
-
-
 
     const onPressItemDelete  = () => {
-
-      let isWithinDataActive = false
-      let tempArr = null
-
-      //Find Item 
-      //    - identify origin Arr
-      //    - delete original item
-      if(dataActive.length > 0){
-        for (let i = 0; i < dataActive.length; i++){
-          if(dataActive[i].id == itemSelected){
-            isWithinDataActive = true
-            
-            //Delete from this array
-            tempArr = dataActive
-            tempArr.splice(i,1);
-            setDataActive(tempArr)   
-  
-            //remove selection
-            setItemSelected(null)
-  
-          }
-        }
-      }
-      
-
-      // not found in dataActive
-      if(!isWithinDataActive){ 
-
-        if(dataCompleted.length > 0){
-          for (let i = 0; i < dataCompleted.length; i++){
-            if(dataCompleted[i].id == itemSelected){
-              
-              //Delete from this array
-              tempArr = dataCompleted
-              tempArr.splice(i,1);
-              setDataCompleted(tempArr)   
-
-              //remove selection
-              setItemSelected(null)
-    
-            }
-          }
-        }
-
-      }
-
-      //once deletes made update storage
-      setAsyncStorage()
-
+      //console.log("delete item" + itemSelected)
     }
-
-
 
 
     const ListItemMain = () => (
@@ -438,7 +314,7 @@ export default function App() {
       {/* Flat Lists */}
       <Text>-----Active-----</Text>
       <FlatList 
-        data={dataActive}
+        data = {dataActive}
         renderItem={myRenderItem}  // use our listItem component from import instead of renderer
         keyExtractor={item => item.id}
         extraData={[itemSelected, updater]}
