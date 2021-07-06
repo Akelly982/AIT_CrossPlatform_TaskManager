@@ -18,13 +18,11 @@ import Theme from './components/Theme';
 // ]
 
 
-
-
 export default function App() {
 
-  const textInputDestination = useRef()
-  const textInputItemName = useRef()
-  const textInputQuantity = useRef()
+  const textInputDestination = useRef(null)
+  const textInputItemName = useRef(null)
+  const textInputQuantity = useRef(null)
 
   const [isfirstRun, setIsFirstRun] = useState(true)
   // const [destination, setDestination] = useState()
@@ -47,8 +45,10 @@ export default function App() {
 
     if(isfirstRun){
       setIsFirstRun(false)
-      getAsyncStorage() 
+      getAsyncStorage()
     }
+
+    //console.log(textInputDestination.current)
 
   })
 
@@ -98,27 +98,30 @@ export default function App() {
   //ADD ITEM ------------------------------------------
   const addItemBtn = () => {
 
-    // console.log( 'destination: ' + textInputDestination.current.value)
-    // console.log( 'itemName: ' + textInputItemName.current.value)
-    // console.log( 'quantity: ' + textInputQuantity.current.value)
+    console.log('destination current:' + textInputDestination.current.textContent)
+    console.log( 'destination: ' + textInputDestination.current.value)
+    console.log( 'itemName: ' + textInputItemName.current.value)
+    console.log( 'quantity: ' + textInputQuantity.current.value)
     
-    if(isNaN(textInputQuantity.current.value)){
-      console.log("quantity is not a number: " + textInputQuantity.current.value)
-    }else{
-      // create a new item in same format of original array
-      let newItem = {id: Date.now().toString(), destination: textInputDestination.current.value, itemName: textInputItemName.current.value, quantity: textInputQuantity.current.value, isComplete: false}
+    //let quantity = textInputQuantity.current.value
+
+    // if(isNaN(quantity)){
+    //   console.log("quantity is not a number: " + quantity)
+    // }else{
+    //   // create a new item in same format of original array
+    //   let newItem = {id: Date.now().toString(), destination: textInputDestination.current.value, itemName: textInputItemName.current.value, quantity: quantity, isComplete: false}
       
-      let tempArr = data
-      tempArr.unshift(newItem)
-      setData(tempArr)
+    //   let tempArr = data
+    //   tempArr.unshift(newItem)
+    //   setData(tempArr)
 
-      setUpdater(!updater)  
-      // I include updater due to setDataActive(newArray) 
-      // dosent update like setDataActive(DataActice.concat(newITem))
+    //   setUpdater(!updater)  
+    //   // I include updater due to setDataActive(newArray) 
+    //   // dosent update like setDataActive(DataActice.concat(newITem))
 
-      //update Storage
-      setAsyncStorage()
-    }
+    //   //update Storage
+    //   setAsyncStorage()
+    //}
 
   }
 
@@ -207,6 +210,7 @@ export default function App() {
 
     }
 
+    // reusable main component 
     const ListItemMain = () => (
       <TouchableOpacity  
             style={[styles.listItemContButton, {backgroundColor: props.bkgColor}]}
@@ -220,10 +224,11 @@ export default function App() {
         </TouchableOpacity>
     )
 
+
+    // create each item 
     if(props.isSelected == false){
       return(
         <View style={styles.listItemOuterCont}>
-            {/* <ListItemMain item={props.item} bkgColor={color} btn={onPressItem}/>  */}
             <ListItemMain />
         </View>
       )
@@ -278,7 +283,6 @@ export default function App() {
             <TextInput 
               style={styles.textInput}
               placeholder="Bottled Water"
-              //onChangeText={(x) => setItemName(x)}
               ref={textInputItemName}
             >
             </TextInput>
@@ -288,7 +292,6 @@ export default function App() {
             <TextInput 
               style={styles.textInput}
               placeholder="2"
-              //onChangeText={(x) => setQuantity(x)}
               ref={textInputQuantity}
               keyboardType="numeric"
             >
