@@ -38,8 +38,8 @@ export const Theme = {
     textDark: textDark,
 
     //Item Btns
-    bkgColorItemInComplete: '#535f6b',
-    bkgColorItemComplete: textDark,
+    bkgColorItemActive: accent,
+    bkgColorItemCompleted: textDark,
     bkgColorSelectedBtn: accent2,
     // On select shown btns
     bkgColorItemBtn1: accent2,

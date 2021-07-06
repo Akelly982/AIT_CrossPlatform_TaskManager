@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import {useState , useEffect, useRef} from 'react';
+import {useState , useEffect, useMemo} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Dimensions} from 'react-native';
 import {Modal, ImageBackground, Pressable, ScrollView, VirtualizedList} from 'react-native';
 
@@ -18,18 +18,21 @@ import Theme from './components/Theme';
 // ]
 
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const widthNeg10 = windowWidth*.90;
+
+
+
 
 
 export default function App() {
 
-  const textInputDestination = useRef()
-  const textInputItemName = useRef()
-  const textInputQuantity = useRef()
-
+  const [windHeight, setWindHeight] = useState(windowHeight)
   const [isfirstRun, setIsFirstRun] = useState(true)
-  // const [destination, setDestination] = useState()
-  // const [itemName, setName] = useState()
-  // const [quantity, setQuantity] = useState()
+  const [destination, setDestination] = useState()
+  const [itemName, setName] = useState()
+  const [quantity, setQuantity] = useState()
 
   const [data, setData] = useState([])
   const [itemSelected , setItemSelected] = useState(null)
@@ -45,9 +48,19 @@ export default function App() {
   // useEffect is called whenever a state is changed
   useEffect( () => {
 
+    if(windHeight != Dimensions.get('window').height){
+      // setWindHeight(Dimensions.get('window').height)
+    }
+
     if(isfirstRun){
       setIsFirstRun(false)
       getAsyncStorage() 
+    }
+
+    if(quantity == 1011011010){
+      setQuantity(0)
+      console.log("super secret btn")
+      
     }
 
   })
@@ -98,15 +111,11 @@ export default function App() {
   //ADD ITEM ------------------------------------------
   const addItemBtn = () => {
 
-    // console.log( 'destination: ' + textInputDestination.current.value)
-    // console.log( 'itemName: ' + textInputItemName.current.value)
-    // console.log( 'quantity: ' + textInputQuantity.current.value)
-    
-    if(isNaN(textInputQuantity.current.value)){
-      console.log("quantity is not a number: " + textInputQuantity.current.value)
+    if(isNaN(quantity)){
+      console.log("quantity is not a number: " + quantity)
     }else{
       // create a new item in same format of original array
-      let newItem = {id: Date.now().toString(), destination: textInputDestination.current.value, itemName: textInputItemName.current.value, quantity: textInputQuantity.current.value, isComplete: false}
+      let newItem = {id: Date.now().toString(), destination: destination, itemName: itemName, quantity: quantity, isComplete: false}
       
       let tempArr = data
       tempArr.unshift(newItem)
@@ -118,8 +127,8 @@ export default function App() {
 
       //update Storage
       setAsyncStorage()
-    }
 
+    }
   }
 
 
@@ -252,62 +261,9 @@ export default function App() {
   }
 
 
-  const HeaderComponent = () => (
-    <View>
-          {/* Title */}
-          <Text style={styles.appTitle}> Scribbles </Text>
-
-          {/* Header */}
-          <View style={styles.inputFieldRowCenterTitle}>
-            <Text>Create Task:</Text>
-          </View>
-    
-          {/* Inputs */}
-          <View style={styles.inputFieldRow}>
-            <Text style={styles.inputFieldRowText}>Location/person:</Text>
-            <TextInput 
-              style={styles.textInput}
-              placeholder="ZenBar/Monica"
-              //onChangeText={(x) => setDestination()}
-              ref={textInputDestination}
-            >
-            </TextInput>
-          </View>
-          <View style={styles.inputFieldRow}>
-            <Text style={styles.inputFieldRowText}>Item name:</Text>
-            <TextInput 
-              style={styles.textInput}
-              placeholder="Bottled Water"
-              //onChangeText={(x) => setItemName(x)}
-              ref={textInputItemName}
-            >
-            </TextInput>
-          </View>
-          <View style={styles.inputFieldRow}>
-            <Text style={styles.inputFieldRowText}>Quantity:</Text>
-            <TextInput 
-              style={styles.textInput}
-              placeholder="2"
-              //onChangeText={(x) => setQuantity(x)}
-              ref={textInputQuantity}
-              keyboardType="numeric"
-            >
-            </TextInput>
-          </View>
-          {/* Button */}
-          <View style={styles.inputFieldRowCenterButton}>
-            <TouchableOpacity 
-              style={styles.inputButton}
-              onPress={addItemBtn}
-            >
-              <Text style={{ color: Theme.textInputBtn}}>Add</Text>
-            </TouchableOpacity>
-          </View>
-    
-    
-          <View style={styles.spacer}>
-            <Text style={styles.spacerText}>---------- Tasks ----------</Text>
-          </View>
+  const SFooter = () => (
+    <View style={styles.spacerFooter}>
+       <Text> footer </Text>
     </View>
   )
 
@@ -317,13 +273,69 @@ export default function App() {
   return (
     <View style={styles.bkgColorMain}>
 
+      {/* Title */}
+      <Text style={styles.appTitle}> Scribbles </Text>
+
+      {/* Input Content
+      {/* Header */}
+      <View style={styles.inputFieldRowCenterTitle}>
+        <Text>Create Task:</Text>
+      </View>
+
+        {/* Inputs */}
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Location/person:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="ZenBar/Monica"
+    onChangeText={(x) => setDestination(x)}
+  >
+  </TextInput>
+</View>
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Item name:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="Bottled Water"
+    onChangeText={(x) => setName(x)}
+  >
+  </TextInput>
+</View>
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Quantity:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="2"
+    onChangeText={(x) => setQuantity(x)}
+    keyboardType="numeric"
+  >
+  </TextInput>
+</View>
+
+
+{/* Buttons */}
+<View style={styles.inputFieldRowCenterButton}>
+  <TouchableOpacity 
+    style={styles.inputButton}
+    onPress={addItemBtn}
+  >
+    <Text style={{ color: Theme.textInputBtn}}>Add</Text>
+  </TouchableOpacity>
+</View>
+
+
+
+<View style={styles.spacer}>
+  <Text style={styles.spacerText}>---------- Tasks ----------</Text>
+</View>
+
       {/* Flat Lists */}
       <FlatList 
           data={data}
           renderItem={myRenderItem}  // use our listItem component from import instead of renderer
           keyExtractor={item => item.id}
           extraData={[itemSelected, updater]}
-          ListHeaderComponent={HeaderComponent}
+          //ListHeaderComponent={HeaderComponent}
       />
     </View>
   );

@@ -54,48 +54,58 @@ export const ListItem = () => {
 
 
 
+{/* Title */}
+<Text style={styles.appTitle}> Scribbles </Text>
 
-      {/* Input Content
-      {/* Header */}
-      <View style={styles.inputFieldRowCenterTitle}>
-        <Text>Create Task:</Text>
-      </View>
-      {/* Inputs */}
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Location/person:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="ZenBar/Monica"
-          onChangeText={(x) => setDestination(x)}
-        >
-        </TextInput>
-      </View>
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Item name:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="Bottled Water"
-          onChangeText={(x) => setName(x)}
-        >
-        </TextInput>
-      </View>
-      <View style={styles.inputFieldRow}>
-        <Text style={styles.inputFieldRowText}>Quantity:</Text>
-        <TextInput 
-          style={styles.textInput}
-          placeholder="2"
-          onChangeText={(x) => setQuantity(x)}
-          keyboardType="numeric"
-        >
-        </TextInput>
-      </View>
-      {/* Buttons */}
-      <View style={styles.inputFieldRowCenterButton}>
-        <TouchableOpacity 
-          style={styles.inputButton}
-          onPress={addItemBtn}
-        >
-          <Text>Add</Text>
-        </TouchableOpacity>
-      </View> */}
+{/* Input Content
+{/* Header */}
+<View style={styles.inputFieldRowCenterTitle}>
+  <Text>Create Task:</Text>
+</View>
 
+{/* Inputs */}
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Location/person:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="ZenBar/Monica"
+    onChangeText={(x) => setDestination(x)}
+  >
+  </TextInput>
+</View>
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Item name:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="Bottled Water"
+    onChangeText={(x) => setName(x)}
+  >
+  </TextInput>
+</View>
+<View style={styles.inputFieldRow}>
+  <Text style={styles.inputFieldRowText}>Quantity:</Text>
+  <TextInput 
+    style={styles.textInput}
+    placeholder="2"
+    onChangeText={(x) => setQuantity(x)}
+    keyboardType="numeric"
+  >
+  </TextInput>
+</View>
+
+
+{/* Buttons */}
+<View style={styles.inputFieldRowCenterButton}>
+  <TouchableOpacity 
+    style={styles.inputButton}
+    onPress={addItemBtn}
+  >
+    <Text style={{ color: Theme.textInputBtn}}>Add</Text>
+  </TouchableOpacity>
+</View>
+
+
+
+<View style={styles.spacer}>
+  <Text style={styles.spacerText}>---------- Tasks ----------</Text>
+</View>
