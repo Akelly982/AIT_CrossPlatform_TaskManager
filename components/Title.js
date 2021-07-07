@@ -2,9 +2,9 @@ import React from "react"
 import { View, StyleSheet, Text} from "react-native"
 import Theme from "./Theme"
 
-export const Title = () => (
+export const Title = (props) => (
     <View>
-      <Text style={styles.appTitle}> MyTitle </Text>
+      <Text style={styles.appTitle}>{props.name}</Text>
     </View>
 )
 

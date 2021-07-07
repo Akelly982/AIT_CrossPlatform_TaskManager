@@ -118,7 +118,7 @@ const listStyles = StyleSheet.create({
 
     listContainer:{
         backgroundColor: Theme.bkgColorBottom,
-        height: 420, //determins the max size of the list dose not auto decide for phone for some reason
+        height: 380, //determins the max size of the list dose not auto decide for phone for some reason
     },
 
     listItemOuterCont:{
@@ -126,7 +126,6 @@ const listStyles = StyleSheet.create({
         flexDirection: 'column',
         alignSelf: 'center',
         width: '70%',
-        // backgroundColor: "yellow",
     },
 
     listItemContButton:{

@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import {useState , useEffect, useMemo} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Dimensions, YellowBox, ListViewComponent} from 'react-native';
-import {Modal, ImageBackground, Pressable, ScrollView, VirtualizedList} from 'react-native';
+import React from 'react';
+import {useState , useEffect} from 'react';
+import { StyleSheet, Text, View, Dimensions} from 'react-native';
 import Constants from 'expo-constants'; //used for statusbar.height
 
 //AsynStorage
@@ -40,10 +38,6 @@ export default function App() {
 
 
 
-
-
-
-
     // ------------------------------------------------
     // ------------- useEFFECT ----------------------
 
@@ -54,14 +48,12 @@ export default function App() {
           getAsyncStorage() 
         }
     
-        // if(quantity == 10110){
-        //   setQuantity(0)
-        //   console.log("super secret btn")
-        // }
+        if(quantity == 10110){
+          setQuantity(0)
+          console.log("super secret btn ")
+        }
     
     })
-
-
 
 
     // ------------------------------------------------
@@ -203,10 +195,7 @@ export default function App() {
             }else{
                 console.log("DELETE ERROR: data has length <= 0")
             }
-
-
         }
-    
     }
 
     const itemSelectedBtn = (itemId) => {
@@ -237,7 +226,7 @@ export default function App() {
 const styles = StyleSheet.create({
 
     container: {
-        backgroundColor: 'yellow',
+        backgroundColor: Theme.textLight,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
