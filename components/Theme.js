@@ -5,22 +5,6 @@ const textLight = "#e8e8e8"
 const textDark = "#3b3b3b"
 
 export const Theme = {
-    // tealBlue: 'hsla(199, 32%, 45%, 1)',
-
-    // BKGCOLORMAIN: "#e8e8e8", 
-    // ACCENTCOLOR: "#24292E",
-
-    // WARNINGCOLOR: "#a05353",  // light red
-
-    // BKGCOLOR: "#B8B4B4", 
-    // BKGCOLOR2: "#807C7C",
-
-    // FIELDTEXT: "#0368DA",
-    // FONTCOLOR: "#e8e8e8",
-    // FONTCOLORDARK: "#3b3b3b",
-
-    // INPUTBUTTON: "#726da8ff",
-    //-----
     
     bkgColorAppTitle: accent,
     bkgColorTop: "#FFFFFF",
@@ -61,42 +45,3 @@ export const Theme = {
   //bright white    #FFFFFF 
   //dull white      #F6F8FA
   //Btn1            #2C974B
-
-
-
-
-// /* CSS HEX */
-// --nyanza: #dff2d8ff;
-// --tea-green: #c6dea6ff;
-// --middle-blue: #7ebdc3ff;
-// --deep-taupe: #7a6263ff;
-// --sage: #ced097ff;
-
-// /* CSS HSL */
-// --nyanza: hsla(104, 50%, 90%, 1);
-// --tea-green: hsla(86, 46%, 76%, 1);
-// --middle-blue: hsla(185, 37%, 63%, 1);
-// --deep-taupe: hsla(358, 11%, 43%, 1);
-// --sage: hsla(62, 38%, 70%, 1);
-
-
-
-
-
-
-
-
-// /* CSS HEX */
-// --eggplant: #594157ff;                       // Darkest
-// --dark-blue-gray: #726da8ff;  Accent
-// --glaucous: #7d8cc4ff;
-// --light-blue: #a0d2dbff;
-// --powder-blue: #bee7e8ff;                    // Lightess
-
-
-// /* CSS HSL */
-// --eggplant: hsla(305, 16%, 30%, 1);
-// --dark-blue-gray: hsla(245, 25%, 54%, 1);
-// --glaucous: hsla(227, 38%, 63%, 1);
-// --light-blue: hsla(189, 45%, 74%, 1);
-// --powder-blue: hsla(181, 48%, 83%, 1);

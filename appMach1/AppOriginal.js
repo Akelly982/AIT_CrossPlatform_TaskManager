@@ -17,18 +17,10 @@ import Theme from './components/Theme';
 //   {id: '132313123', destination: 'James', itemName: "KFC", quantity: "4", isComplete: false},
 // ]
 
-
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const widthNeg10 = windowWidth*.90;
-
-
-
-
 
 export default function App() {
 
-  const [windHeight, setWindHeight] = useState(windowHeight)
   const [isfirstRun, setIsFirstRun] = useState(true)
   const [destination, setDestination] = useState()
   const [itemName, setName] = useState()
@@ -48,19 +40,14 @@ export default function App() {
   // useEffect is called whenever a state is changed
   useEffect( () => {
 
-    if(windHeight != Dimensions.get('window').height){
-      // setWindHeight(Dimensions.get('window').height)
-    }
-
     if(isfirstRun){
       setIsFirstRun(false)
       getAsyncStorage() 
     }
 
-    if(quantity == 1011011010){
+    if(quantity == 10110){
       setQuantity(0)
       console.log("super secret btn")
-      
     }
 
   })
@@ -260,14 +247,6 @@ export default function App() {
     
   }
 
-
-  const SFooter = () => (
-    <View style={styles.spacerFooter}>
-       <Text> footer </Text>
-    </View>
-  )
-
-  
   
   //MAIN RETURN 
   return (
@@ -283,51 +262,49 @@ export default function App() {
       </View>
 
         {/* Inputs */}
-<View style={styles.inputFieldRow}>
-  <Text style={styles.inputFieldRowText}>Location/person:</Text>
-  <TextInput 
-    style={styles.textInput}
-    placeholder="ZenBar/Monica"
-    onChangeText={(x) => setDestination(x)}
-  >
-  </TextInput>
-</View>
-<View style={styles.inputFieldRow}>
-  <Text style={styles.inputFieldRowText}>Item name:</Text>
-  <TextInput 
-    style={styles.textInput}
-    placeholder="Bottled Water"
-    onChangeText={(x) => setName(x)}
-  >
-  </TextInput>
-</View>
-<View style={styles.inputFieldRow}>
-  <Text style={styles.inputFieldRowText}>Quantity:</Text>
-  <TextInput 
-    style={styles.textInput}
-    placeholder="2"
-    onChangeText={(x) => setQuantity(x)}
-    keyboardType="numeric"
-  >
-  </TextInput>
-</View>
-
-
-{/* Buttons */}
-<View style={styles.inputFieldRowCenterButton}>
-  <TouchableOpacity 
-    style={styles.inputButton}
-    onPress={addItemBtn}
-  >
-    <Text style={{ color: Theme.textInputBtn}}>Add</Text>
-  </TouchableOpacity>
-</View>
+      <View style={styles.inputFieldRow}>
+        <Text style={styles.inputFieldRowText}>Location/person:</Text>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="ZenBar/Monica"
+          onChangeText={(x) => setDestination(x)}
+        >
+        </TextInput>
+      </View>
+      <View style={styles.inputFieldRow}>
+        <Text style={styles.inputFieldRowText}>Item name:</Text>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="Bottled Water"
+          onChangeText={(x) => setName(x)}
+        >
+        </TextInput>
+      </View>
+      <View style={styles.inputFieldRow}>
+        <Text style={styles.inputFieldRowText}>Quantity:</Text>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="2"
+          onChangeText={(x) => setQuantity(x)}
+          keyboardType="numeric"
+        >
+        </TextInput>
+      </View>
+      {/* Button */}
+      <View style={styles.inputFieldRowCenterButton}>
+        <TouchableOpacity 
+          style={styles.inputButton}
+          onPress={addItemBtn}
+        >
+          <Text style={{ color: Theme.textInputBtn}}>Add</Text>
+        </TouchableOpacity>
+      </View>
 
 
 
-<View style={styles.spacer}>
-  <Text style={styles.spacerText}>---------- Tasks ----------</Text>
-</View>
+      <View style={styles.spacer}>
+        <Text style={styles.spacerText}>---------- Tasks ----------</Text>
+      </View>
 
       {/* Flat Lists */}
       <FlatList 
@@ -337,6 +314,7 @@ export default function App() {
           extraData={[itemSelected, updater]}
           //ListHeaderComponent={HeaderComponent}
       />
+
     </View>
   );
 
@@ -351,6 +329,7 @@ const styles = StyleSheet.create({
 
   bkgColorMain:{
     backgroundColor: Theme.bkgColorBottom,
+    maxHeight: windowHeight,
   },
 
 
